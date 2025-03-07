@@ -1,14 +1,7 @@
 # Usa una imagen oficial de Java como base
-FROM eclipse-temurin:17-jdk
-
-# Configura el directorio de trabajo
-WORKDIR /app
+FROM amazoncorretto:17-alpine-jdk
 
 # Copia el archivo JAR generado en la imagen
-COPY target/*.jar app.jar
+COPY target/grupoEmpresarialGarcia-0.0.1-SNAPSHOT.jar app.jar
 
-# Expone el puerto (Render usará la variable de entorno PORT)
-EXPOSE 8080
-
-# Comando para ejecutar la aplicación
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java" , "-jar", "/app.jar"]
