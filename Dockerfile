@@ -1,7 +1,23 @@
-# Usa una imagen oficial de Java como base
+# Etapa 1: Construcción del JAR
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
+
+# Define el directorio de trabajo
+WORKDIR /app
+
+# Copia los archivos del proyecto al contenedor
+COPY . .
+
+# Ejecuta Maven para compilar y generar el JAR
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Imagen final con el JAR generado
 FROM amazoncorretto:17-alpine-jdk
 
-# Copia el archivo JAR generado en la imagen
-COPY target/grupoEmpresarialGarcia-0.0.1-SNAPSHOT.jar app.jar
+# Define el directorio de trabajo
+WORKDIR /app
 
-ENTRYPOINT ["java" , "-jar", "/app.jar"]
+# Copia el JAR generado en la etapa anterior
+COPY --from=builder /app/target/*.jar app.jar
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
